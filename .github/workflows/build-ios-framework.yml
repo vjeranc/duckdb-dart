@@ -10,7 +10,16 @@
 
 name: Build iOS Framework
 
+permissions:
+  contents: write
+
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/build-ios-framework.yml'
+      - 'ios/**'
   workflow_dispatch:
     inputs:
       duckdb_version:
