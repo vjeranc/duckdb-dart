@@ -1,11 +1,11 @@
 #
-# Unified Modern Workflow: Build DuckDB with httpfs for Android
+# Unified Modern Workflow: Build DuckDB for Android
 #
 # Features:
 # - Dynamic DuckDB version detection
 # - Uses pre-built OpenSSL/cURL from openssl_for_ios_and_android releases
 # - Matrix builds for all ABIs
-# - Statically linked extensions (icu, json, parquet, httpfs)
+# - Statically linked extensions (core_functions, icu, json, parquet)
 #
 
 name: Build Android Libraries
@@ -36,12 +36,12 @@ env:
   # ========== EXTENSION CONFIGURATION ==========
   # Core extensions (built-in to DuckDB, use BUILD_EXTENSIONS)
   # Note: postgres_scanner excluded - libpq has Android NDK incompatibilities (explicit_bzero, __int128)
-  CORE_EXTENSIONS: "icu;json;parquet;httpfs;fts;inet;vss;autocomplete;ducklake;sqlite_scanner"
+  CORE_EXTENSIONS: "core_functions;icu;json;parquet"
 
   # Community extensions (loaded via DUCKDB_EXTENSION_CONFIGS with SOURCE_DIR)
   # Format: "name|repo|branch" separated by spaces
   # These require git clone --recursive to get submodules
-  COMMUNITY_EXTENSIONS: "h3|isaacbrodsky/h3-duckdb|main"
+  COMMUNITY_EXTENSIONS: ""
   # To add more: "h3|isaacbrodsky/h3-duckdb|main a5|Query-farm/a5|main"
   # Note: a5 requires Rust toolchain for cross-compilation
   # =============================================
@@ -316,7 +316,6 @@ jobs:
             -DEXTENSION_STATIC_BUILD=1 \
             -DBUILD_EXTENSIONS="${{ env.CORE_EXTENSIONS }}" \
             -DDUCKDB_EXTENSION_CONFIGS="${GITHUB_WORKSPACE}/duckdb-src/extension_config_mobile.cmake" \
-            -DSKIP_EXTENSIONS="core_functions" \
             -DBUILD_LOADABLE_EXTENSIONS=OFF \
             -DENABLE_EXTENSION_AUTOLOADING=OFF \
             -DENABLE_EXTENSION_AUTOINSTALL=OFF \
@@ -393,7 +392,7 @@ jobs:
 
             ## Extensions (statically linked)
             **Core:** `${{ env.CORE_EXTENSIONS }}`
-            **Community:** h3 ([h3-duckdb](https://github.com/isaacbrodsky/h3-duckdb))
+            **Community:** none
 
             ## Dependencies
             Built with libraries from [${{ env.OPENSSL_REPO }}](https://github.com/${{ env.OPENSSL_REPO }}/releases/tag/${{ needs.prepare.outputs.openssl_tag }})

@@ -4,7 +4,7 @@ DUCKDB_REPO = https://github.com/duckdb/duckdb
 DUCKDB_DIR = duckdb
 BUILD_DIR = $(DUCKDB_DIR)/build
 LIB_DIR = src/main/jniLibs
-EXTENSIONS = 'icu;parquet;json;httpfs'
+EXTENSIONS = 'core_functions;icu;parquet;json'
 
 ifndef ANDROID_NDK_HOME
 # https://developer.android.com/studio
@@ -24,8 +24,8 @@ NINJA := $(shell which ninja)
 CMAKE_GENERATOR := $(if $(NINJA),-G Ninja,)
 
 # Add these new variables
-ENABLE_EXTENSION_AUTOLOADING = 1
-ENABLE_EXTENSION_AUTOINSTALL = 1
+ENABLE_EXTENSION_AUTOLOADING = 0
+ENABLE_EXTENSION_AUTOINSTALL = 0
 EXTENSION_STATIC_BUILD = 1
 CMAKE_VARS_BUILD = -DBUILD_UNITTESTS=0 \
     -DBUILD_SHELL=0 \

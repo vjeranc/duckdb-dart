@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
 DuckDB is an in-process SQL OLAP database management system.
 This plugin provides DuckDB support for Flutter iOS apps.
                         DESC
-  s.homepage         = 'https://github.com/yharby/duckdb-dart'
+  s.homepage         = 'https://github.com/vjeranc/duckdb-dart'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'DuckDB Dart Contributors' => 'github@duckdb.org' }
   s.source           = { :path => '.' }
@@ -32,7 +32,7 @@ This plugin provides DuckDB support for Flutter iOS apps.
   # Update DUCKDB_IOS_VERSION when upgrading DuckDB
   s.prepare_command = <<-CMD
     DUCKDB_IOS_VERSION="v1.4.3-ios"
-    RELEASE_URL="https://github.com/yharby/duckdb-dart/releases/download/${DUCKDB_IOS_VERSION}/duckdb-xcframework-ios.zip"
+    RELEASE_URL="https://github.com/vjeranc/duckdb-dart/releases/download/${DUCKDB_IOS_VERSION}/duckdb-xcframework-ios.zip"
 
     mkdir -p Libraries/release
 
