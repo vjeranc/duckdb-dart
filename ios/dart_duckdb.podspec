@@ -31,21 +31,29 @@ This plugin provides DuckDB support for Flutter iOS apps.
   # IMPORTANT: Use pinned version for reproducible builds
   # Update DUCKDB_IOS_VERSION when upgrading DuckDB
   s.prepare_command = <<-CMD
-    DUCKDB_IOS_VERSION="v1.4.3-ios"
+    DUCKDB_IOS_VERSION="v1.5.3-ios"
     RELEASE_URL="https://github.com/vjeranc/duckdb-dart/releases/download/${DUCKDB_IOS_VERSION}/duckdb-xcframework-ios.zip"
+    RELEASE_SHA256="29f8b79b65c0e6fba32bd05599949e27a2e1c9d2e3de9f0b1a0a68c5ffb3c084"
 
     mkdir -p Libraries/release
 
     if [ ! -d "Libraries/release/duckdb.xcframework" ]; then
       echo "Downloading DuckDB iOS XCFramework (${DUCKDB_IOS_VERSION})..."
       echo "URL: $RELEASE_URL"
-      curl -L -o duckdb-xcframework-ios.zip "$RELEASE_URL"
+      curl -fL --retry 3 --connect-timeout 20 -o duckdb-xcframework-ios.zip "$RELEASE_URL"
 
       # Verify download succeeded (file should be > 10MB for XCFramework)
       FILE_SIZE=$(stat -f%z duckdb-xcframework-ios.zip 2>/dev/null || stat -c%s duckdb-xcframework-ios.zip 2>/dev/null || echo "0")
       if [ "$FILE_SIZE" -lt 10000000 ]; then
         echo "ERROR: Downloaded file is too small ($FILE_SIZE bytes), download may have failed"
         cat duckdb-xcframework-ios.zip
+        exit 1
+      fi
+      ACTUAL_SHA256=$(shasum -a 256 duckdb-xcframework-ios.zip | awk '{print $1}')
+      if [ "$ACTUAL_SHA256" != "$RELEASE_SHA256" ]; then
+        echo "ERROR: DuckDB iOS XCFramework checksum mismatch"
+        echo "Expected: $RELEASE_SHA256"
+        echo "Actual:   $ACTUAL_SHA256"
         exit 1
       fi
 
